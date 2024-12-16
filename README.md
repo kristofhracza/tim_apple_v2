@@ -7,7 +7,7 @@ As always, this is made for educational purposes only!
 > [!NOTE]  
 > Do not add issues without a comprehensive explanation and/or log. Refer to the [FAQ](#faq) section for more info!
 
-![](screenshots/1.png)
+![](screenshots/1.PNG)
 
 
 # Compiling From Source
