@@ -23,7 +23,6 @@
 
 
 
-
 void Hooks::Setup() {
 	Logger::Write("Hooks", "Setup");
 	MH_Initialize();
@@ -59,7 +58,7 @@ void Hooks::Setup() {
 	// IDA (FSA Plugin): #STR: "cl: CreateMove clamped invalid attack history %d index in , "cl: CreateMove
 	hkCreateMove.Create(Scanner::PatternScan("client.dll", "48 8B C4 4C 89 40 ? 48 89 48 ? 55 53 56 57 48 8D A8"), reinterpret_cast<void*>(&CreateMove));
 	Logger::Write("Hooks", "CreateMove");
-	
+
 	hkValidateInput.Create(Scanner::PatternScan("client.dll", "40 53 48 83 EC 20 48 8B D9 E8 ? ? ? ? C6 83 ? ? ? ? ? 33 C0"), reinterpret_cast<void*>(&ValidateInput));
 	//hkValidateInput.Create(Virtual::Get(Interfaces::Input, VTABLE::CLIENT::VALIDATEINPUT), reinterpret_cast<void*>(&ValidateInput));
 	Logger::Write("Hooks", "ValidateInput");
@@ -83,7 +82,7 @@ void Hooks::Setup() {
 
 
 void Hooks::Destroy() {
-	MH_DisableHook(MH_ALL_HOOKS);
+	MH_DisableHook(MH_ALL_HOOKS); 
 	MH_RemoveHook(MH_ALL_HOOKS);
 
 	MH_Uninitialize();
@@ -92,16 +91,12 @@ void Hooks::Destroy() {
 
 HRESULT __stdcall Hooks::Present(IDXGISwapChain* pSwapChain, UINT uSyncInterval, UINT uFlags) {
 	const auto oPresent = hkPresent.GetOriginal();
-	Logger::Write("Hooks::Present", "GetOriginal");
 
 	if (Interfaces::RenderTargetView == nullptr) {
-		Interfaces::CreateRenderTarget(Interfaces::SwapChain->pDXGISwapChain);
+		if (FAILED(Interfaces::CreateRenderTarget(pSwapChain))) return oPresent(pSwapChain, uSyncInterval, uFlags);
 		Logger::Write("Hooks::Present", "CreateRenderTarget");
 	}
-	if (Interfaces::RenderTargetView != nullptr) {
-		Interfaces::DeviceContext->OMSetRenderTargets(1, &Interfaces::RenderTargetView, nullptr);
-		Logger::Write("Hooks::Present", "OMSetRenderTargets");
-	}
+
 	// Rendering all ESP and menu
 	GUI::Render();
 	Logger::Write("Hooks::Present", "GUI::Render");
@@ -112,7 +107,7 @@ HRESULT __stdcall Hooks::Present(IDXGISwapChain* pSwapChain, UINT uSyncInterval,
 		Logger::Write("Hooks::Present", "VISUALS::SmokeColourMod");
 	}
 
-	return oPresent(pSwapChain, uSyncInterval, uFlags); // Either use: Interfaces::SwapChain->pDXGISwapChain or pSwapChain argument -- Decide based on the amount of crashes lol
+	return oPresent(pSwapChain, uSyncInterval, uFlags);
 }
 
 
@@ -120,15 +115,11 @@ HRESULT __fastcall Hooks::ResizeBuffers(IDXGISwapChain* pSwapChain, std::uint32_
 	const auto oResizeBuffers = hkResizeBuffers.GetOriginal();
 	Logger::Write("Hooks::ResizeBuffers", "GetOriginal");
 
-	if (Interfaces::RenderTargetView) Interfaces::DestroyRenderTarget();
-	ImGui_ImplDX11_InvalidateDeviceObjects();
-
 	auto hResult = oResizeBuffers(pSwapChain, nBufferCount, nWidth, nHeight, newFormat, nFlags);
 	Logger::Write("Hooks::ResizeBuffers", "oResizeBuffers");
 
 	if (SUCCEEDED(hResult)) {
 		Interfaces::CreateRenderTarget(pSwapChain);
-		ImGui_ImplDX11_CreateDeviceObjects();
 		Logger::Write("Hooks::ResizeBuffers", "CreateRenderTarget");
 	}
 

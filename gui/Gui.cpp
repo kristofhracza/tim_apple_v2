@@ -61,7 +61,7 @@ void GUI::Destroy() {
 	ImGui::DestroyContext();
 }
 
-
+ 
 void GUI::Render() {
 	ImGui_ImplDX11_NewFrame();
 	ImGui_ImplWin32_NewFrame();

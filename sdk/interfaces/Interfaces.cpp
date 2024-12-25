@@ -71,67 +71,43 @@ void InterfaceFunctions::SetInterfaces() {
     }
 }
 
-void Interfaces::CreateRenderTarget(IDXGISwapChain* pSwapChain) {
-    DestroyRenderTarget();
+int Interfaces::CreateRenderTarget(IDXGISwapChain* pSwapChain) {
     Logger::Write("CreateRenderTarget", "DestroyRenderTarget");
 
-    // Get device
     if (FAILED(pSwapChain->GetDevice(__uuidof(ID3D11Device), (void**)&Device))) {
-        return;
+        Logger::Write("CreateRenderTarget", "GetImmediateContext - FAIL");
+        return -1;
     }
+    
     Device->GetImmediateContext(&DeviceContext);
-    Logger::Write("CreateRenderTarget", "GetImmediateContext");
-
-
-    // Swapchain description
-    DXGI_SWAP_CHAIN_DESC sd;
-    pSwapChain->GetDesc(&sd);
-
-    static const auto GetCorrectDXGIFormat = [](DXGI_FORMAT eCurrentFormat){
-        switch (eCurrentFormat)
-        {
-        case DXGI_FORMAT_R8G8B8A8_UNORM_SRGB:
-            return DXGI_FORMAT_R8G8B8A8_UNORM;
-        }
-
-        return eCurrentFormat;
-    };
-
+    DXGI_SWAP_CHAIN_DESC pDesc;
+    pSwapChain->GetDesc(&pDesc);
+    
     ID3D11Texture2D* pBackBuffer = nullptr;
-    // Get RendertTargetView
+    
     if (SUCCEEDED(pSwapChain->GetBuffer(0, IID_PPV_ARGS(&pBackBuffer)))) {
         Logger::Write("CreateRenderTarget", "GetBuffer");
         if (pBackBuffer) {
-            D3D11_RENDER_TARGET_VIEW_DESC desc{};
-            desc.Format = static_cast<DXGI_FORMAT>(GetCorrectDXGIFormat(sd.BufferDesc.Format));
-            desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2D;
 
-            HRESULT pRenderTarget = Device->CreateRenderTargetView(pBackBuffer, &desc, &RenderTargetView);
-            Logger::Write("CreateRenderTarget", "CreateRenderTargetView (1)");
-            if (FAILED(pRenderTarget)) {
-                desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS; // Retry with multisampled dimension
-                pRenderTarget = Device->CreateRenderTargetView(pBackBuffer, &desc, &RenderTargetView);
-                Logger::Write("CreateRenderTarget", "CreateRenderTargetView (2)");
-                if (FAILED(pRenderTarget)) {
-                    pRenderTarget = Device->CreateRenderTargetView(pBackBuffer, nullptr, &RenderTargetView); // Fallback
-                    Logger::Write("CreateRenderTarget", "CreateRenderTargetView (3)");
-                    if (FAILED(pRenderTarget)) {
-                        pBackBuffer->Release();
-                        return;
-                    }
-                }
-            }
+            D3D11_RENDER_TARGET_VIEW_DESC desc{};
+            desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+            desc.ViewDimension = D3D11_RTV_DIMENSION_TEXTURE2DMS;
+
+            Device->CreateRenderTargetView(pBackBuffer, &desc, &RenderTargetView);
+            DeviceContext->OMSetRenderTargets(1, &RenderTargetView, nullptr);
 
             pBackBuffer->Release();
-            GUI::hWindow = sd.OutputWindow; 
+            pBackBuffer = nullptr;
             
-            if (!GUI::pOldWndProc) {
-                GUI::pOldWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(GUI::hWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(Hooks::WndProc)));
-            }
+            GUI::hWindow = pDesc.OutputWindow;
+            GUI::pOldWndProc = reinterpret_cast<WNDPROC>(SetWindowLongPtr(GUI::hWindow, GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(Hooks::WndProc)));
+            
             GUI::Setup(GUI::hWindow, Device, DeviceContext);
+
             Logger::Write("CreateRenderTarget", " GUI::Setup");
         }
     }
+    return 0;
 }
 
 

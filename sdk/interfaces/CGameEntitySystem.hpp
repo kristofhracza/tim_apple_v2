@@ -28,7 +28,7 @@ public:
 	}
 
 	int GetHighestEntityIndex(){
-		return *reinterpret_cast<int*>(reinterpret_cast<std::uintptr_t>(this) + 0x1520);
+		return *reinterpret_cast<int*>(reinterpret_cast<std::uintptr_t>(this) + 0x20F0); // dwGameEntitySystem_highestEntityIndex 
 	}
 private:
 	// IDA:  #STR: "(missing),", "(missing)", "Ent %3d: %s class %s name %s\n" | or find "cl_showents" cvar -> look for callback

@@ -17,7 +17,6 @@ void VISUALS::SmokeColourMod(){
 		pBaseEntity->GetSchemaClassInfo(&pClassInfo);
 		if (pClassInfo == nullptr) continue;
 
-
 		// C_SmokeGrenadeProjectile -- There is C_SmokeGrenade, but that's the item in the player's hand
 		if (std::string(pClassInfo->m_szName) == "C_SmokeGrenadeProjectile") {
 			C_SmokeGrenadeProjectile* pSmoke = reinterpret_cast<C_SmokeGrenadeProjectile*>(pBaseEntity);

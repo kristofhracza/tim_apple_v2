@@ -49,7 +49,7 @@ struct ID3D11RenderTargetView;
 
 
 namespace Interfaces {
-	void CreateRenderTarget(IDXGISwapChain* pSwapChain);
+	int CreateRenderTarget(IDXGISwapChain* pSwapChain);
 	void DestroyRenderTarget();
 	void DestroyDeviceContext();
 	void DestroyDevice();
