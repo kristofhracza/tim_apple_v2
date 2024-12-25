@@ -31,11 +31,9 @@ void AIM::Aimbot(C_CSPlayerPawn* pLocalPlayerPawn, CUserCmd* pCmd, CBaseUserCmdP
 		C_CSPlayerPawn* pPlayerPawn = Interfaces::GameResourceService->m_pGameEntitySystem->Get<C_CSPlayerPawn>(pPlayerController->GetPawnHandle());
 		if (pPlayerPawn == nullptr) continue;
 
-		// Checks
 		if (!pPlayerController->IsPawnAlive()) continue;
 		if (pLocalPlayerPawn->GetTeam() == pPlayerPawn->GetTeam()) continue;
 
-		// Skeleton
 		if (pPlayerPawn->GetGameSceneNode() == nullptr) continue;
 		CSkeletonInstance* pSkeletonInstance = pPlayerPawn->GetGameSceneNode()->GetSkeletonInstance();
 
@@ -69,14 +67,12 @@ void AIM::Aimbot(C_CSPlayerPawn* pLocalPlayerPawn, CUserCmd* pCmd, CBaseUserCmdP
 		if (vAngleAimAt.IsZero()) continue;
 	}
 
-	// Setting angles
 	vNewViewAngle = ClampAngles(NormalizeAngles(vNewViewAngle));
 	if (Config::AIM.Silent)
 		vNewViewAngle = pBaseCmd->pViewAngles->angValue + vAngleAimAt;
 	else
 		vNewViewAngle = pBaseCmd->pViewAngles->angValue + vAngleAimAt / Config::AIM.Smoothing;
 
-	// Silent aim
 	pCmd->SetSubTickAngle(vNewViewAngle);
 
 	// Normal aim -- we set our view angle as well

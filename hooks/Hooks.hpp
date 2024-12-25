@@ -30,7 +30,7 @@ namespace VTABLE{
 
 	namespace CLIENT{
 		enum{
-			CREATEMOVE = 21,
+			CREATEMOVE = 21, // We use IDA signature until better way is found
 			VALIDATEINPUT = 7,
 			MOUSEINPUTENABLED = 16,
 			FRAMESTAGENOTIFY = 36,
@@ -64,8 +64,6 @@ namespace Hooks {
 	void __fastcall ValidateInput(CCSGOInput* pInput, int unk);
 	bool __fastcall MouseInputEnabled(void* pThisptr);
 	void __fastcall FrameStageNotify(void* rcx, int nFrameStage);
-	//__int64* __fastcall LevelInit(void* pClientModeShared, const char* szNewMap);
-	//__int64 __fastcall LevelShutdown(void* pClientModeShared);
 	void __fastcall OverrideView(void* pClientModeCSNormal, CViewSetup* pSetup);
 	void __fastcall DrawObject(void* pAnimatableSceneObjectDesc, void* pDx11, CMeshData* arrMeshDraw, int nDataCount, void* pSceneView, void* pSceneLayer, void* pUnk, void* pUnk2);
 	void* IsRelativeMouseMode(void* pThisptr, bool bActive);
@@ -83,8 +81,6 @@ namespace Hooks {
 	inline CBaseHookObject<decltype(&MouseInputEnabled)> hkMouseInputEnabled = {};
 	inline CBaseHookObject<decltype(&IsRelativeMouseMode)> hkIsRelativeMouseMode = {};
 	inline CBaseHookObject<decltype(&FrameStageNotify)> hkFrameStageNotify = {};
-	//inline CBaseHookObject<decltype(&LevelInit)> hkLevelInit = {};
-	//inline CBaseHookObject<decltype(&LevelShutdown)> hkLevelShutdown = {};
 	inline CBaseHookObject<decltype(&OverrideView)> hkOverrideView = {};
 	inline CBaseHookObject<decltype(&DrawObject)> hkDrawObject = {};
 	inline CBaseHookObject<decltype(&DrawArraySmokeVolume)> hkDrawArraySmokeVolume = {};

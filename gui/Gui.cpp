@@ -28,7 +28,8 @@ bool GUI::Setup(HWND hWnd, ID3D11Device* pDevice, ID3D11DeviceContext* pContext)
 
 	ImGuiIO& io = ImGui::GetIO();
 	io.IniFilename = io.LogFilename = nullptr;
-	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange; // Only when in game -- TODO
+	// TODO: Cursor disappears after leaving menu, add checker of some sort
+	io.ConfigFlags = ImGuiConfigFlags_NoMouseCursorChange;
 
 	io.Fonts->AddFontDefault();
 	Menu::MenuText = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\Verdana.ttf",14.f);
@@ -69,31 +70,27 @@ void GUI::Render() {
 
 	ImGui::SetNextWindowSize(ImVec2(Menu::Width, Menu::Height));
 
-	// Cheat DX11 features
-	MISC::AntiFlash(); // Not checking for state here --  TODO: find better way to improve performance
-	if (ImGui::GetBackgroundDrawList()) {
-		if (Config::ESP.state) {
-			ESP::MainLoop();
-			Logger::Write("GUI::Render", "ESP::MainLoop");
-		}
-		{
-			if (Config::AIM.FOVCircle && Config::AIM.state && Interfaces::EngineClient->IsConnected() && Interfaces::EngineClient->IsInGame()) {
-				float fScreenMidX = ImGui::GetIO().DisplaySize.x / 2.f;
-				float fScreenMidY = ImGui::GetIO().DisplaySize.y / 2.f;
+	// DirectX related features and menu render
 
-				ImGui::GetBackgroundDrawList()->AddCircle(
-					{ fScreenMidX ,fScreenMidY },
-					(Config::AIM.FOV * 10),
-					ImColor(Config::ESP.AttributeColours[0], Config::ESP.AttributeColours[1], Config::ESP.AttributeColours[2])
-					, 0, 1.f
-				);
-			}
+	// TODO: Check state before function call
+	MISC::AntiFlash();
+	if (ImGui::GetBackgroundDrawList()) {
+		if (Config::ESP.State) ESP::MainLoop();
+		if (Config::AIM.FOVCircle && Config::AIM.State && Interfaces::EngineClient->IsConnected() && Interfaces::EngineClient->IsInGame()) {
+			float fScreenMidX = ImGui::GetIO().DisplaySize.x / 2.f;
+			float fScreenMidY = ImGui::GetIO().DisplaySize.y / 2.f;
+
+			ImGui::GetBackgroundDrawList()->AddCircle(
+				{ fScreenMidX ,fScreenMidY },
+				(Config::AIM.FOV * 10),
+				ImColor(Config::ESP.AttributeColours[0], Config::ESP.AttributeColours[1], Config::ESP.AttributeColours[2])
+				, 0, 1.f
+			);
 		}
 	}
 
 	Menu::Main();
 
 	ImGui::Render();
-
 	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 }

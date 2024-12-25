@@ -13,7 +13,7 @@ namespace Config {
 	inline MenuSettings SETTINGS;
 
 	struct ESPConfig {
-		bool state = false;
+		bool State = false;
 
 		bool IsBoundingBox = false;
 		float BoxWidth = 2.5f;
@@ -55,7 +55,7 @@ namespace Config {
 
 
 	struct AimConfig {
-		bool state = false;
+		bool State = false;
 
 		bool Silent = false;
 
@@ -80,9 +80,9 @@ namespace Config {
 	struct MovementConfig {
 		bool IsAA = false;
 
-		bool bJitter = false;
-		float fYaw = 180.f;
-		float fPitch = 89.f;
+		bool Jitter = false;
+		float Yaw = 180.f;
+		float Pitch = 89.f;
 
 		bool IsBHOP = false;
 	}; inline MovementConfig MOVEMENT = {};

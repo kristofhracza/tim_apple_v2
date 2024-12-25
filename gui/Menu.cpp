@@ -130,7 +130,7 @@ void Menu::Main() {
 
 		ImGui::SetCursorPosY(ImGui::GetWindowHeight() - 30);
 		ImGui::SetCursorPosX(ColumnsOffsetX);
-		ImGui::Text("Version 1.0");
+		ImGui::Text("Version 1.0.1");
 
 		ImGui::NextColumn();
 
@@ -172,7 +172,7 @@ void Menu::ESP() {
 	Menu::Spacing(4);
 	ImGui::PopFont();
 
-	ImGui::Checkbox("ESP Enabled", &Config::ESP.state);
+	ImGui::Checkbox("ESP Enabled", &Config::ESP.State);
 	Menu::Spacing(2);
 	ImGui::Checkbox("Bounding Box", &Config::ESP.IsBoundingBox);
 	Menu::Spacing(2);
@@ -245,7 +245,7 @@ void Menu::Aim() {
 	Menu::Spacing(4);
 	ImGui::PopFont();
 
-	ImGui::Checkbox("Aim Enabled", &Config::AIM.state);
+	ImGui::Checkbox("Aim Enabled", &Config::AIM.State);
 	Menu::Spacing(2);
 	ImGui::Checkbox("Silent Aim", &Config::AIM.Silent);
 	Menu::Spacing(2);
@@ -293,11 +293,11 @@ void Menu::Movement() {
 
 	ImGui::Checkbox("Enabled", &Config::MOVEMENT.IsAA);
 	Menu::Spacing(2);
-	ImGui::Checkbox("Jitter", &Config::MOVEMENT.bJitter);
+	ImGui::Checkbox("Jitter", &Config::MOVEMENT.Jitter);
 	Menu::Spacing(2);
-	ImGui::SliderFloat("Yaw", &Config::MOVEMENT.fYaw, -180.f, 180.f);
+	ImGui::SliderFloat("Yaw", &Config::MOVEMENT.Yaw, -180.f, 180.f);
 	Menu::Spacing(2);
-	ImGui::SliderFloat("Pitch", &Config::MOVEMENT.fPitch, -89.f, 89.f);
+	ImGui::SliderFloat("Pitch", &Config::MOVEMENT.Pitch, -89.f, 89.f);
 	Menu::Spacing(2);
 
 	ImGui::EndChild();
@@ -357,7 +357,7 @@ void Menu::Settings() {
 
 	ImGui::Checkbox("Debug Log", &Config::SETTINGS.IsDebug);
 	ImGui::PushFont(MenuTextItalic);
-	ImGui::Text("tim_apple.txt is stored on the desktop");
+	ImGui::Text("This will open a console!");
 	ImGui::PopFont();
 	Menu::Spacing(2);
 

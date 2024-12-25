@@ -21,7 +21,6 @@
 void ESP::MainLoop() {
 	if (Interfaces::EngineClient->IsConnected() && Interfaces::EngineClient->IsInGame()) {
 
-		// Obtain local player
 		CCSPlayerController* pLocalPlayerController = CCSPlayerController::GetLocalPlayerController();
 		if (pLocalPlayerController == nullptr) return;
 		C_CSPlayerPawn* pLocalPlayerPawn = Interfaces::GameResourceService->m_pGameEntitySystem->Get<C_CSPlayerPawn>(pLocalPlayerController->GetPawnHandle());

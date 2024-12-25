@@ -22,7 +22,6 @@ Press **Build solution** and you should receive `tim_apple_v2.dll` file.
 - Weapon icons are not mapped to weapon names 100% correctly
 - Anti Aim shakes player model when it jitters
 - Cursors disappears after the menu has been opened. *(imgui flags)*
-- Logging isn't the best
 
 ## Feature Ideas
 - Chams

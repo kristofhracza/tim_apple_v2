@@ -15,21 +15,21 @@ void MOVEMENT::AntiAim(CUserCmd* pCmd, CBaseUserCmdPB* pBaseCmd, CCSGOInput* pIn
     float fRandomY = static_cast<float>((std::rand() % 110) + 180);
 
     // AA logic
-    Vector3 VAntiAimAngle = {Config::MOVEMENT.fPitch, Config::MOVEMENT.fYaw ,0};
+    Vector3 VAntiAimAngle = {Config::MOVEMENT.Pitch, Config::MOVEMENT.Yaw ,0};
     Vector3 vNormalAngles = pBaseCmd->pViewAngles->angValue;
-    if (Config::MOVEMENT.bJitter) {
+    if (Config::MOVEMENT.Jitter) {
         if (bSwitch) {
-            VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y + Config::MOVEMENT.fYaw - fRandomY;
-            VAntiAimAngle.x = pBaseCmd->pViewAngles->angValue.x + Config::MOVEMENT.fPitch - fRandomX;
+            VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y + Config::MOVEMENT.Yaw - fRandomY;
+            VAntiAimAngle.x = pBaseCmd->pViewAngles->angValue.x + Config::MOVEMENT.Pitch - fRandomX;
         }
         else {
-            VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y + Config::MOVEMENT.fYaw;
-            VAntiAimAngle.x = pBaseCmd->pViewAngles->angValue.x + Config::MOVEMENT.fPitch;
+            VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y + Config::MOVEMENT.Yaw;
+            VAntiAimAngle.x = pBaseCmd->pViewAngles->angValue.x + Config::MOVEMENT.Pitch;
         }
         bSwitch = !bSwitch;
     }
     else {
-        VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y - Config::MOVEMENT.fYaw;
+        VAntiAimAngle.y = pBaseCmd->pViewAngles->angValue.y - Config::MOVEMENT.Yaw;
     }
     VAntiAimAngle = NormalizeAngles(ClampAngles(VAntiAimAngle));
 
